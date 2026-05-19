@@ -96,7 +96,7 @@ SELECT
     CASE
         WHEN DATEDIFF(@snapshot_date, r.last_order_date) > 90 THEN 1
         ELSE 0
-    END                                                         AS churned
+    END AS churned
 
 FROM rfm r
 LEFT JOIN order_gaps  g ON r.distributor_id = g.distributor_id

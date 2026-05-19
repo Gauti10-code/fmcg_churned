@@ -18,8 +18,16 @@ DATA_PATH="data/online_retail_II.xlsx"
 CHUNK_SIZE=10_000
 
 def get_engine():
-  url=f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+  url=f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
   return create_engine(url,echo=False)
+
+def create_database_if_missing():
+  root_url=f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/"
+  engine=create_engine(root_url,echo=False)
+  with engine.connect() as conn:
+    conn.execute(text(f"CREATE DATABASE IF NOT EXISTS `{DB_NAME}`"))
+  engine.dispose()
+  print(f"Database '{DB_NAME}' ready.")
 
 def load_raw_data(path:str)->pd.DataFrame:
   print("Reading Excel file(this takes ~30 seconds)...")
@@ -131,6 +139,7 @@ def verify_load(engine):
 
 
 if __name__ == "__main__":
+    create_database_if_missing()
     engine = get_engine()
     
     df        = load_raw_data(DATA_PATH)

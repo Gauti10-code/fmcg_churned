@@ -58,8 +58,7 @@ def encode_segment(df:pd.DataFrame):
 
 def select_features(df:pd.DataFrame):
     feature_cols = [
-        # RFM raw
-        "recency_days",
+        # RFM raw (recency_days removed — it IS the churn label: recency > 90 = churned)
         "frequency",
         "monetary",
         "avg_order_value",
@@ -74,20 +73,15 @@ def select_features(df:pd.DataFrame):
         "spend_trend_pct",
         "customer_lifespan_days",
 
-        # RFM scores
-        "r_score",
+        # RFM scores (r_score, rfm_total_score, rfm_segment_encoded removed — derived from recency_days)
         "f_score",
         "m_score",
-        "rfm_total_score",
-
-        # Encoded segment
-        "rfm_segment_encoded"
     ]
 
     X = df[feature_cols]
     y = df["churned"]
 
-    print(f"\n✅ Features selected: {len(feature_cols)}")
+    print(f"\nFeatures selected: {len(feature_cols)}")
     print(f"   {feature_cols}")
     return X, y, feature_cols
 
@@ -159,7 +153,7 @@ if __name__=="__main__":
         scaler, le, feature_cols
     )
 
-    print("\n🎉 Step 5 complete!")
+    print("\nStep 5 complete!")
     print("   outputs/ now has all train/test splits + scaler + encoder")
-    print("   Next: python notebooks/02_models.ipynb")
+    print("   Next: run models.ipynb")
 
